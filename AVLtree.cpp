@@ -4,11 +4,13 @@
 using namespace std;
 
 
+//For Merge Sort
 struct stock {
     long long id;
     long long price;
 };
 
+//Re-Merging sorted elements
 void conquer(stock arr[], long long p, long long q, long long r) {
     long long n1 = q - p + 1;
     long long n2 = r - q;
@@ -45,6 +47,7 @@ void conquer(stock arr[], long long p, long long q, long long r) {
     }
 }
 
+//Dividing array into individual elements
 void divide(stock arr[], long long y, long long z) {
     if (y < z) {
         long long x = y + (z - y) / 2;
@@ -56,12 +59,14 @@ void divide(stock arr[], long long y, long long z) {
     }
 }
 
+//To check if array has been sorted
 void printarr(stock arr[], long long size) {
     for (long long i = 0; i < size; i++) {
         cout << arr[i].id << " " << arr[i].price << endl;
     }
 }
 
+//All information of the stock which will be put in the AVL tree
 struct Node {
     stock key;
     struct Node *left = nullptr;
@@ -69,6 +74,7 @@ struct Node {
     long long height;
 };
 
+//In that tree, the height of the node
 long long height(struct Node *N) {
     if (N == nullptr)
         return 0;
@@ -76,6 +82,7 @@ long long height(struct Node *N) {
         return N->height;
 }
 
+//Simple function to find max if passed 2 integers
 long long maximum(long long a, long long b) {
     if (a > b)
         return a;
@@ -83,6 +90,7 @@ long long maximum(long long a, long long b) {
         return b;
 }
 
+//Initiallizing new node within AVL tree
 struct Node *newNode(stock key) {
     struct Node *node = new (struct Node);
     node->key = key;
@@ -92,6 +100,7 @@ struct Node *newNode(stock key) {
     return (node);
 }
 
+//Rotating right in case of Left bias
 struct Node *rRot(struct Node *y) {
     struct Node *x = y->left;
     struct Node *T2 = x->right;
@@ -105,6 +114,7 @@ struct Node *rRot(struct Node *y) {
     return x;
 }
 
+//Rotating lef tin case of right bias
 struct Node *lRot(struct Node *x) {
     struct Node *y = x->right;
     struct Node *T2 = y->left;
@@ -118,6 +128,7 @@ struct Node *lRot(struct Node *x) {
     return y;
 }
 
+//Finding which side (left/right) needs to be altered to create AVL tree
 long long balance(struct Node *node) {
     if (node == nullptr) {
         return 0;
@@ -125,7 +136,7 @@ long long balance(struct Node *node) {
         return height(node->left) - height(node->right);
 }
 
-struct Node *min(struct Node *rand) {
+//Finding minimum element to replace elementstruct Node *min(struct Node *rand) {
     struct Node *pointer = rand;
     while (pointer->left != nullptr)
         pointer = pointer->left;
@@ -133,6 +144,7 @@ struct Node *min(struct Node *rand) {
     return pointer;
 }
 
+//Adding new company details
 struct Node *reg(struct Node *node, stock key) {
     if (node == nullptr)
         return (newNode(key));
@@ -144,7 +156,7 @@ struct Node *reg(struct Node *node, stock key) {
         return node;
     node->height = 1 + maximum(height(node->left), height(node->right));
     long long bal = balance(node);
-
+//Rotation to ensure AVL is balanced
     if (bal > 1 && key.id < node->left->key.id)
         return rRot(node);
 
@@ -164,6 +176,7 @@ struct Node *reg(struct Node *node, stock key) {
     return node;
 }
 
+//Deleting Company details
 struct Node *dereg(struct Node *node, stock key) {
     if (node == nullptr)
         return node;
@@ -173,9 +186,11 @@ struct Node *dereg(struct Node *node, stock key) {
         node->right = dereg(node->right, key);
     } else {
         struct Node *temp1;
+        //Leaf node
         if (node->left == nullptr && node->right == nullptr) {
             node = nullptr;
-        } else if (node->left == nullptr) {
+        }//Single child
+         else if (node->left == nullptr) {
             temp1 = node;
             node = node->right;
             free(temp1);
@@ -183,7 +198,8 @@ struct Node *dereg(struct Node *node, stock key) {
             temp1 = node;
             node = node->left;
             free(temp1);
-        } else {
+        } //Two daughter nodes
+        else {
             struct Node *temp = min(node->right);
             node->key = temp->key;
             node->right = dereg(node->right, temp->key);
@@ -193,6 +209,7 @@ struct Node *dereg(struct Node *node, stock key) {
         return node;
     long long bal = balance(node);
     node->height = 1 + maximum(height(node->left), height(node->right));
+    //Re-ensuring balanced AVL
     if (bal > 1 && balance(node->left) >= 0)
         return rRot(node);
     if (bal > 1 && balance(node->left) < 0) {
@@ -208,18 +225,14 @@ struct Node *dereg(struct Node *node, stock key) {
     return node;
 }
 
+//Updating if beyond threshold
 struct Node *update(struct Node *root, stock input, long long threshold) {
     Node *current = root;
     while (current != nullptr && current->key.id != input.id) {
         if (current->key.id > input.id) {
-//            if (current->left == nullptr)
-//                return root;
-//            else
+
                 current = current->left;
         } else if (current->key.id < input.id) {
-//            if (current->right == nullptr)
-//                return root;
-//            else
                 current = current->right;
         }
     }
@@ -235,6 +248,7 @@ struct Node *update(struct Node *root, stock input, long long threshold) {
 }
 
 
+//Splitting stocks in ratio y:z
 struct Node *split(struct Node *root, stock input, long long threshold, long long y, long long z) {
     Node *current = root;
     while (current->key.id != input.id && current != nullptr) {
@@ -260,6 +274,7 @@ struct Node *split(struct Node *root, stock input, long long threshold, long lon
     return root;
 }
 
+//Checking AVL formation
 void printlist(struct Node *root) {
     if (root != nullptr) {
         cout << root->key.id << " " << root->key.price << endl;
@@ -268,6 +283,7 @@ void printlist(struct Node *root) {
     }
 }
 
+//Direct transfer from sorted array to Binary Search Tree
 struct Node *transfer(stock arr[], long long a, long long b) {
     if (a > b)
         return nullptr;
