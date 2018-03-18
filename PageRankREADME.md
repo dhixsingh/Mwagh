@@ -24,12 +24,7 @@ Initially we create a sparsematrix header that only points to itself. As we add 
 0 100 -> Now there is not value at 0,2. So on value 2 of 0,1 will be counted. Output will be 2.  
 6 -> Matrix multiplication  
 5 1 2 3 4 5 -> We have to assume a matrix in the sparse matrix and multiply it with the entered column matrix.  
-We currently have   
-[0 0 0 0 0         [1             [0  
- 2 0 0 0 0          2              2  
- 0 0 0 0 0    *     3      =       0  
- 0 0 0 0 0          4              0  
- 0 0 0 4 0]         5]             4]  
+
 
 This is the only example test case I have. 
 If you wish to use your own input cases, this is how you must proceed.  
