@@ -14,6 +14,7 @@ To-Do :-
 i.Implement merge sort algorithm for pre-sorting the stocks
 ii.Construct an AVL tree from these sorted key value pairs
 iii.Support the following operations:
+
 a)register-company <company-id> <initial-price>: Insert a new node in the AVL Tree
 with the given company-id and price. Print the company-id and the stock price separated
 by a space(see output format).
